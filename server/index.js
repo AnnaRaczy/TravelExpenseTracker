@@ -13,6 +13,10 @@ app.get('/api', function(req, res){
     res.send('Hello from server')
 });
 
+app.get('/api/users/:userName', function(req, res){
+    res.send('Hello from server')
+});
+
 // All other GET requests not handled before will return static React app 
 app.get("*", (req, res) => {
     res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'))
