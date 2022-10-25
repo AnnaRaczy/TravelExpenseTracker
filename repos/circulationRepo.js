@@ -54,6 +54,7 @@ const circulationRepo = ()=> {
                 results = await db.collection('newspapers').insertMany(data);
                 resolve(results);
                 client.close()
+                db.collection('newspapers').drop()
             } catch(error){
                 reject(error)
             }

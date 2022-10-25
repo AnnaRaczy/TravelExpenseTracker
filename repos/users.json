@@ -1,0 +1,22 @@
+[
+	{
+        "users" : {
+                  "userID" : "",
+                  "trips" : {
+                        "trip_id": {
+                            "trip_name" : "",
+                            "budget" : "",
+                            "start_date" : "",
+                            "end_date": "",
+                            "expense_categories": {
+                                "category_name" : "",
+                                "amount": null
+                            }
+
+                        }
+                }
+                  
+        }
+
+    }
+  ]
