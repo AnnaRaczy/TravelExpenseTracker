@@ -1,6 +1,6 @@
 const express = require('express');
 
-const trips = require('../repos/repoFunctions');
+const trips = require('../controllers/repoFunctions');
 const router = express.Router();
 
 
