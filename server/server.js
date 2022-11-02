@@ -1,9 +1,11 @@
 const express = require("express");
 const path = require("path");
 const db = require("../db/db");
+const debug = require('debug')('server');
+require('dotenv').config()
 
 const app = express();
-const port = 3001;
+const port = process.env.REACT_APP_PORT || 3000;
 
 // Have Node serve the files for our built React app
 app.use(express.static(path.resolve(__dirname, "../client/build"))); // to access built React project
@@ -17,9 +19,9 @@ app.get("/", async (req, res) => {
   res.send("DB not Connected");
 });
 
-app.get("/music", async (req, res) => {
-  const music = await db.getMusic();
-  res.send(music);
+app.get("/users", async (req, res) => {
+  const users = await db.getUsers();
+  res.send(users);
 })
 
 const userRouter = require("./routes/users");
