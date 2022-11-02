@@ -6,7 +6,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <LandingPage />
-        <img src="https://image.shutterstock.com/image-photo/fluffy-brown-labrador-puppy-600w-1111033583.jpg"></img>
+        {/* <i mg src="https://image.shutterstock.com/image-photo/fluffy-brown-labrador-puppy-600w-1111033583.jpg"></img> */}
       </header>
     </div>
   );

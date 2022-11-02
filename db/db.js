@@ -1,11 +1,11 @@
 const { Admin } = require('mongodb');
-const circulationRepo = require("../repos/circulationRepo")
-const data  = require("../circulation.json")
+const repoFunctions = require("../repos/repoFunctions")
+const data  = require("../repos/users.json")
 
 const MongoClient = require('mongodb').MongoClient;
 
 const url = 'mongodb://127.0.0.1:27017';
-const dbName = 'Circulation';
+const dbName = 'Users';
 const client = new MongoClient(url);
 
 async function checkDB(){
@@ -21,13 +21,12 @@ async function checkDB(){
     } 
 };
 
-async function getMusic() {
+async function getUsers() {
     try{
         await client.connect();
-        console.log("getMusic:");
-        const result = await circulationRepo.loadData(data)
+        console.log("Users:");
+        const result = await repoFunctions.loadData(data)
         console.log(result)
-        client.close();
         return result
         // const admin = client.db(dbName).admin()
         // console.log(await admin.listDatabases())
@@ -38,5 +37,5 @@ async function getMusic() {
     }
 }
 
-module.exports = {checkDB, getMusic};
+module.exports = {checkDB, getUsers};
 

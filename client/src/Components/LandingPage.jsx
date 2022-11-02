@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from "react";
 
 const LandingPage = () => {
-    const [data, setData] = useState(null);
+    const [data, setData] = useState();
 
     useEffect(() => {
-        fetch("/api")
+        fetch("/users")
         .then(res => res.json())
-        .then(data => setData(data.message))
-    }, []);
+        .then(data => setData(data['insertedIds'][0]))
+    }, [data]);
 
     return (
         <div>
