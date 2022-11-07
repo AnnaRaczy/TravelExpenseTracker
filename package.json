@@ -21,9 +21,13 @@
   },
   "homepage": "https://github.com/AnnaRaczy/TravelExpenseTracker#readme",
   "dependencies": {
+    "body-parser": "^1.20.1",
+    "config": "^3.3.8",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "mongodb": "^4.10.0",
+    "mongoose": "^6.7.1",
     "nodemon": "^2.0.20"
   },
   "proxy": "http://localhost:3001",
@@ -31,5 +35,8 @@
     "restartable": "rs",
     "delay": 2500
   },
-  "runArgs" : ["--env-file", ".env"]
+  "runArgs": [
+    "--env-file",
+    ".env"
+  ]
 }
