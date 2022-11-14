@@ -1,3 +1,3 @@
 {
-    "mongoURI" : "mongodb+srv://annar:process.env.REACT_APP_PASSWORDo@cluster0.lujuhm6.mongodb.net/?retryWrites=true&w=majority"
+    "mongoURI" : "mongodb+srv://annar:process.env.REACT_APP_PASSWORD@cluster0.lujuhm6.mongodb.net/?retryWrites=true&w=majority"
 }

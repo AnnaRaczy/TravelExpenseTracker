@@ -21,21 +21,7 @@ async function checkDB(){
     } 
 };
 
-async function getTrips() {
-    try{
-        await client.connect();
-        console.log("Trips:");
-        const result = await repoFunctions.loadData(data)
-        console.log(result)
-        return result
-        // const admin = client.db(dbName).admin()
-        // console.log(await admin.listDatabases())
-        // console.log(await client.db("local").listCollections())
-    } catch(err){
-        console.log(err)
-        return false
-    }
-}
 
-module.exports = {checkDB, getTrips};
+
+module.exports = {checkDB};
 
