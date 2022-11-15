@@ -78,6 +78,16 @@ app.post('/user/:user/trips', express.json(), DB, UserFromDB, async(req, res, ne
   next();
 })
 
+app.delete('/user/:user/:trip', express.json(), DB, UserFromDB, async(req, res, next) => {
+
+  const user = req.params.user
+  await user.deleteTrip();
+  console.log("Trip deleted");
+  res.send('Delete request called')
+
+
+})
+
 app.get('/user/:user/expenses', DB, UserFromDB, async(req, res, next) => {
   const user = req.params.user;
   console.log(user);
