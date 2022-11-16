@@ -61,7 +61,7 @@ const repoFunctions = ()=> {
 
 
     const addTrip = async(trip) => {
-        const { id, name, budget, from ,to } = req.body;
+        const {id, name, budget, from ,to} = req.body;
 
         try {
             const mapping = new MappingModel({
@@ -91,7 +91,7 @@ const repoFunctions = ()=> {
 
 
     const updateTrip = async(req, res) => {
-        const { id, name, budget, from, to  } = req.body
+        const {id, name, budget, from, to} = req.body
         const options = {
             returnNewDocument: true, 
             upsert: true
@@ -151,7 +151,7 @@ const repoFunctions = ()=> {
 
 
     const addExpense = async(expense) => {
-        const { id, category, amount} = req.body;
+        const {id, category, amount} = req.body;
 
         try {
             const mapping = new MappingModel({
@@ -205,7 +205,6 @@ const repoFunctions = ()=> {
     }
 
     const deleteExpense = async(req, res) => {
-
         const { id } = req.params
 
         try {

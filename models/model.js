@@ -5,77 +5,78 @@ const {getTrips, addTrip, getExpenses, addExpense, findByUsername} = require('..
 const Schema = mongoose.Schema;
 
 
-const ModelFunctions = ()  => {const User = {
+const ModelFunctions = ()  => {
+    const User = {
         username: {type: String, required: true},
         name: {type: String, required: true},
         email: {type: String, required: true}
     }
 
-const optionsUser = {
-    methods: {getTrips, addTrip, getExpenses, addExpense},
-    statics: {findByUsername}
-}    
+    const optionsUser = {
+        methods: {getTrips, addTrip, getExpenses, addExpense},
+        statics: {findByUsername}
+    }    
 
 
 
-const Trips = {
-    tripId: {type: String}, // ????
-    name: {
-        type: String, 
-        required: true,
-        minLength: 3,
-        maxLength: 20
-    },
-    budget: {
-        type: Number, 
-        required: false,
-        min: 0
+    const Trips = {
+        tripId: {type: String}, // ????
+        name: {
+            type: String, 
+            required: true,
+            minLength: 3,
+            maxLength: 20
+        },
+        budget: {
+            type: Number, 
+            required: false,
+            min: 0
 
-    },
-    from: {type: Date, required: false},
-    to: {type: Date, required: false},
+        },
+        from: {type: Date, required: false},
+        to: {type: Date, required: false},
 
-}
-
-const optionsTrips = {
-    methods: {},
-    statics: {}
-}
-
-
-
-const Expenses = {
-    expenseId: {type: String}, // ????
-    category : {
-        type: String, 
-        required: true,
-        minLength: 3,
-        maxLength: 20
-    },
-    amount: {
-        type: Number, 
-        required: true,
-        min: 0
     }
-}
 
-const optionsExpenses = {
-    methods: {},
-    statics: {}
-}
-
+    const optionsTrips = {
+        methods: {getTrips, addTrip},
+        statics: {findByUsername}
+    }
 
 
-const Mapping = {
-    userId: mongoose.Schema.Types.ObjectId,
-    tripId: mongoose.Schema.Types.ObjectId,
-    expenseId: mongoose.Schema.Types.ObjectId
-}
 
-const optionsMapping = {
-    methods: {},
-    statics: {}
-}
+    const Expenses = {
+        expenseId: {type: String}, // ????
+        category : {
+            type: String, 
+            required: true,
+            minLength: 3,
+            maxLength: 20
+        },
+        amount: {
+            type: Number, 
+            required: true,
+            min: 0
+        }
+    }
+
+    const optionsExpenses = {
+        methods: {getExpenses, addExpense},
+        statics: {findByUsername}
+    }
+
+
+
+    const Mapping = {
+        userId: mongoose.Schema.Types.ObjectId,
+        tripId: mongoose.Schema.Types.ObjectId,
+        expenseId: mongoose.Schema.Types.ObjectId
+    }
+
+    const optionsMapping = {
+        methods: {},
+        statics: {}
+    }
 
 
 

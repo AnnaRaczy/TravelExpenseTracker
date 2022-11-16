@@ -12,8 +12,7 @@ const app = express();
 const port = process.env.REACT_APP_PORT || 3000;
 
 
-// Have Node serve the files for our built React app
-app.use(express.static(path.resolve(__dirname, "../client/build"))); // to access built React project
+app.use(express.static(path.resolve(__dirname, "../client/build"))); 
 
 const URI = "mongodb+srv://annar:QazwsxEdc@Trips.tmkg2z6.mongodb.net/?retryWrites=true&w=majority"
 
@@ -41,10 +40,12 @@ app.get("/", async (req, res) => {
 });
 
 app.post('/user/:user/add', express.json(), DB, async (req, res, next) => {
+  const {username, name, email} = req.body
+
   const user = new UserModel({
-    username: req.body.username,
-    name: req.body.name,
-    email: req.body.email
+    username,
+    name,
+    email
   })
 
   await user.save()
@@ -53,8 +54,7 @@ app.post('/user/:user/add', express.json(), DB, async (req, res, next) => {
 })
 
 app.get('/user/:user/trips', DB, UserFromDB, async(req, res, next) => {
-  const user = req.params.user;
-  console.log(user);
+  const { user } = req.params;
 
   const trips = await user.getTrips();
   res.send(trips);
@@ -62,13 +62,14 @@ app.get('/user/:user/trips', DB, UserFromDB, async(req, res, next) => {
 })
 
 app.post('/user/:user/:trip', express.json(), DB, UserFromDB, async(req, res, next) => {
-  const {user} = req.params
+  const { user } = req.params
+  const {name, budget, from, to} = req.body
 
   const trip = new TripsModel({
-    name: req.body.name,
-    budget: req.body.budget,
-    from: req.body.from,
-    to: req.body.to
+    name,
+    budget,
+    from,
+    to
   })
 
   await trip.save();
@@ -79,7 +80,7 @@ app.post('/user/:user/:trip', express.json(), DB, UserFromDB, async(req, res, ne
 
 app.put('/user/:user/:trip', express.json(), DB, UserFromDB, async(req, res) => {
   const { user } = req.params
-  const { name, budget, from, to} = req.body
+  const {name, budget, from, to} = req.body
 
   const trip = new TripsModel({
     name,
@@ -111,7 +112,7 @@ app.get('/user/:user/expenses', DB, UserFromDB, async(req, res, next) => {
 
 app.post('/user/:user/:expense', DB, UserFromDB, async(req, res, next) => {
   const { user } = req.params;
-  const { category, amount} = req.body
+  const {category, amount} = req.body
 
   const expense = new ExpensesModel({
     category,
