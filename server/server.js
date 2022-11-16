@@ -62,34 +62,16 @@ app.get('/user/:user/trips', DB, UserFromDB, async(req, res, next) => {
 })
 
 app.post('/user/:user/:trip', express.json(), DB, UserFromDB, async(req, res, next) => {
-  const { user } = req.params
-  const {name, budget, from, to} = req.body
+  const { user } = req.params;
 
-  const trip = new TripsModel({
-    name,
-    budget,
-    from,
-    to
-  })
-
-  await trip.save();
-  await user.addTrip(trip)
+  await user.addTrip()
   res.send(`Added trip to ${trip.name}`)
   next();
 })
 
 app.put('/user/:user/:trip', express.json(), DB, UserFromDB, async(req, res) => {
   const { user } = req.params
-  const {name, budget, from, to} = req.body
 
-  const trip = new TripsModel({
-    name,
-    budget,
-    from,
-    to
-  })
-
-  await trip.save();
   await user.updateTrip()
   res.send('Trip updated');
 
@@ -112,14 +94,7 @@ app.get('/user/:user/expenses', DB, UserFromDB, async(req, res, next) => {
 
 app.post('/user/:user/:expense', DB, UserFromDB, async(req, res, next) => {
   const { user } = req.params;
-  const {category, amount} = req.body
-
-  const expense = new ExpensesModel({
-    category,
-    amount
-  })
-
-  await expense.save();
+  
   await user.addExpense(expense);
   res.send(`Added expense to ${expense.category}`)
   next()

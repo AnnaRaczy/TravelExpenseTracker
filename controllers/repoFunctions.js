@@ -60,7 +60,7 @@ const repoFunctions = ()=> {
     }
 
 
-    const addTrip = async(trip) => {
+    const addTrip = async(req, res) => {
         const {id, name, budget, from ,to} = req.body;
 
         try {
