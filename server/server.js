@@ -1,7 +1,6 @@
 const express = require("express");
 const { default: mongoose } = require("mongoose");
 const path = require("path");
-const db = require("../controllers/db");
 const debug = require('debug')('server');
 require('dotenv').config()
 const tripsRouter = require('../routes/routes')
@@ -110,6 +109,16 @@ app.post('/user/:user/expenses', DB, UserFromDB, async(req, res, next) => {
   await user.addExpense(expense);
   res.send(`Added expense to ${expense.category}`)
   next()
+})
+
+app.delete('/user/:user/:expense', express.json(), DB, UserFromDB, async(req, res, next) => {
+
+  const user = req.params.user
+  await user.deleteExpense();
+  console.log("Expense deleted");
+  res.send('Delete request called')
+
+
 })
 
 // All other GET requests not handled before will return static React app

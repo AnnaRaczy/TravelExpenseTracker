@@ -9,43 +9,19 @@ const repoFunctions = ()=> {
     const dbName = 'trips';
     const client = new MongoClient(url);
 
-    // const get = (query, limit) => {
-    //     return new Promise(async(resolve, reject) => {
-    //         try{
-    //             await client.connect();
-    //             const db = client.db(dbName);
+    const checkDB = async() => {
+    
+        try{
+            await client.connect();
+            client.close();
+            console.log("CheckDB:Connected");
+            return true
+        }catch(err){
+             console.log(err);
+             return false;
+        } 
+    };
 
-    //             let items = db.collection('trips').find(query);
-                
-    //             if (limit >0) {
-    //                 items = items.limit(limit);
-    //             }
-
-    //             resolve(await items.toArray());
-    //             client.close()
-
-    //         } catch(error){
-    //             reject(error)
-    //         }
-    //     })
-    // }
-
-    // const getById = (id) => {
-    //     return new Promise(async (resolve, reject) => {
-    //         const client= new MongoClient(url);
-    //         try{
-    //             await client.connect();
-    //             const db = client.db(dbName);
-
-    //             let item = await db.collection('trips').findOne({_id: ObjectId(id)}); 
-    //             resolve(item)
-    //             client.close();
-    //         } catch(error){
-    //             reject(error)
-    //         }
-    //     })
-
-    // }
 
     const loadData = (data) =>{
         return new Promise(async (resolve, reject) => {
@@ -68,12 +44,20 @@ const repoFunctions = ()=> {
 
     const getTrips = async() => {
 
-        const tripMappings = await MappingModel.find({userId: this._id})
+        try{
+            const tripMappings = await MappingModel.find({userId: this._id})
         let trips = [];
         for (let mapping of tripMappings) {
             trips.push( mapping.tripId)
         }
+        } catch(err) {
+            res.status(400).json({
+                err,
+                message: 'Trips not found'
+            })
+        }
     }
+
 
     const addTrip = async(trip) => {
         const mapping = new MappingModel({
@@ -85,54 +69,66 @@ const repoFunctions = ()=> {
         console.log(`New Mapping: ${mapping}`);
     }
 
+
     const updateTrip = async(req, res) => {
         const body = req.body
+        const options = {
+            returnNewDocument: true, 
+            upsert: true
+        }
 
-        const trip = await MappingModel.findOneAndUpdate({tripId: req.params.id}, (err, travel) => {
-            if(err) {
-                return res.status(400).json({
-                    err,
-                    message: 'Trip not found'
-                })
-            }
-            travel.name = body.name
-            travel.budget = body.budget
-            travel.from = body.from
-            travel.to = body.to
+        try {
+            await MappingModel.findOneAndUpdate({tripId: req.params.id}, 
+
+            {name: body.name,
+            budget: body.budget,
+            from: body.from,
+            to: body.to},
+
+            options
+            )
+
+        } catch(err) {
+            res.status(400).json({
+                err,
+                message: 'Trip not updated' // ? not found won't be true 
+            })
+        }
+
+        // const trip = await MappingModel.findOneAndUpdate({tripId: req.params.id}, {returnNewDocument: true}, {upsert: true}, (err, travel) => {
+        //     if(err) {
+        //         return res.status(400).json({
+        //             err,
+        //             message: 'Trip not found'
+        //         })
+        //     }
+        //     travel.name = body.name
+        //     travel.budget = body.budget
+        //     travel.from = body.from
+        //     travel.to = body.to
 
             
-        })
+        // })
 
-        await trip.save();
-        console.log(`Trip ${req.params._id} has been updated.`)
+        // await trip.save(); // not needed?
+        // console.log(`Trip ${req.params._id} has been updated.`)
 
     }
 
     const deleteTrip = async(req, res) => {
+        const id = req.params.id
 
-        const trip = await MappingModel.findOneAndDelete({tripId: req.params.id}, (err, travel) => {
-            if(err) { 
-                return res.status(400).json({
-                    success: false,
-                    err: err
-                })
-            }
+        try {
+            await MappingModel.findOneAndDelete({tripId: id});
+            console.log('Trip deleted');
 
-        })
-        if(!trip) {
-            return res.status(404).json({
-                success: false,
-                message: 'Trip not found'
+        } catch(err) {
+            res.status(404).json({
+                err: err,
+                message: 'Trip not deleted'
             })
         }
-
-        return res.status(200).json({
-            success: true,
-            data: trip
-        })
-        .catch (err => { 
-            console.log(err)
-        })
+        
     }
 
 
@@ -158,50 +154,58 @@ const repoFunctions = ()=> {
 
     const updateExpenses = async(req, res) => {
         const body = req.body
+        const options = {
+            returnNewDocument: true, 
+            upsert: true
+        }
 
-        const expense = await MappingModel.findOneAndUpdate({expenseId: req.params.id}, (err, travel) => {
-            if(err) {
-                return res.status(400).json({
-                    err,
-                    message: 'Trip not found'
-                })
-            }
-            travel.category = body.category
-            travel.amount = body.amount
+
+        try {
+            await MappingModel.findOneAndUpdate({expenseId: req.params.id},
+                {
+                category: body.category,
+                amount: body.amount
+                },
+                options
+                )
+        } catch(err) {
+            res.status(400).json({
+                err,
+                message: 'Expense not updated'
+            })
+        }
+        // const expense = await MappingModel.findOneAndUpdate({expenseId: req.params.id}, (err, travel) => {
+        //     if(err) {
+        //         return res.status(400).json({
+        //             err,
+        //             message: 'Trip not found'
+        //         })
+        //     }
+        //     travel.category = body.category
+        //     travel.amount = body.amount
 
             
-        })
+        // })
 
-        await expense.save();
-        console.log(`Expenses ${req.params._id} have been updated.`)
+        // await expense.save();
+        // console.log(`Expenses ${req.params._id} have been updated.`)
 
     }
 
     const deleteExpense = async(req, res) => {
 
-        const expense = await MappingModel.findOneAndDelete({expenseId: req.params.id}, (err, travel) => {
-            if(err) { 
-                return res.status(400).json({
-                    success: false,
-                    err: err
-                })
-            }
+        const id = req.params.id
 
-        })
-        if(!expense) {
-            return res.status(404).json({
-                success: false,
-                message: 'Expense not found'
+        try {
+            await MappingModel.findOneAndDelete({expenseId: id})
+            console.log('Expense deleted')
+
+        } catch(err) {
+            res.status(404).json({
+                err: err,
+                message: 'Expense not deleted'
             })
         }
-
-        return res.status(200).json({
-            success: true,
-            data: expense
-        })
-        .catch (err => { 
-            console.log(err)
-        })
     }
 
 
