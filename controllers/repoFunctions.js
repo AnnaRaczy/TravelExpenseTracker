@@ -42,13 +42,14 @@ const repoFunctions = ()=> {
     }
 
 
-    const getTrips = async() => {
+    const getTrips = async(req, res) => {
+        const id = req.params.id
 
-        try{
-            const tripMappings = await MappingModel.find({userId: this._id})
-        let trips = [];
-        for (let mapping of tripMappings) {
-            trips.push( mapping.tripId)
+        try {
+            const tripMappings = await MappingModel.find({userId: id})
+            let trips = [];
+            for (let mapping of tripMappings) {
+                trips.push(mapping.tripId)
         }
         } catch(err) {
             res.status(400).json({
@@ -60,13 +61,32 @@ const repoFunctions = ()=> {
 
 
     const addTrip = async(trip) => {
-        const mapping = new MappingModel({
-            userId: this._id,
-            tripId: this._id
-        })
+        const body = req.params.body
 
-        await mapping.save();
-        console.log(`New Mapping: ${mapping}`);
+        try {
+            const mapping = new MappingModel({
+                userId: this._id, // req.params.user
+                tripId: this._id // req.params.trip
+            })
+
+            const trip = new TripsModel({
+                tripId: body.id,
+                name: body.name,
+                budget: body.budget,
+                from: body.from,
+                to: body.to
+            })
+    
+            await mapping.save();
+            await trip.save();
+            console.log(`New Mapping: ${mapping}`);
+
+        } catch(err) {
+            res.status(400).json({
+                err,
+                message: 'Trip not created'
+            })
+        }
     }
 
 
@@ -94,25 +114,6 @@ const repoFunctions = ()=> {
                 message: 'Trip not updated' // ? not found won't be true 
             })
         }
-
-        // const trip = await MappingModel.findOneAndUpdate({tripId: req.params.id}, {returnNewDocument: true}, {upsert: true}, (err, travel) => {
-        //     if(err) {
-        //         return res.status(400).json({
-        //             err,
-        //             message: 'Trip not found'
-        //         })
-        //     }
-        //     travel.name = body.name
-        //     travel.budget = body.budget
-        //     travel.from = body.from
-        //     travel.to = body.to
-
-            
-        // })
-
-        // await trip.save(); // not needed?
-        // console.log(`Trip ${req.params._id} has been updated.`)
-
     }
 
     const deleteTrip = async(req, res) => {
@@ -135,22 +136,46 @@ const repoFunctions = ()=> {
 
     const getExpenses = async() => {
 
-        const expenseMappings = await MappingModel.find({userId: this._id})
-        let expenses = [];
-        for (let mapping of expenseMappings) {
-            expenses.push( mapping.tripId)
+        try {const expenseMappings = await MappingModel.find({userId: this._id})
+            let expenses = [];
+            for (let mapping of expenseMappings) {
+                expenses.push( mapping.tripId)
+        }} catch(err) {
+            res.status(400).json({
+                err,
+                message: 'No trips to return'
+            })
         }
     }
 
-    const addExpense = async(expense) => {
-        const mapping = new MappingModel({
-            userId: this._id,
-            expenseId: this._id
-        })
 
-        await mapping.save();
-        console.log(`New Mapping: ${mapping}`);
+    const addExpense = async(expense) => {
+        const body = req.params.body;
+
+        try {
+            const mapping = new MappingModel({
+                userId: this._id, // req.params.user
+                expenseId: this._id // req.params.expense
+            })
+
+            const expense = new ExpensesModel({
+                expenseId: body.id,
+                category: body.category,
+                amount: body.amount
+            })
+    
+            await mapping.save();
+            await expense.save();
+            console.log(`New Mapping: ${mapping}`);
+
+        } catch(err) {
+            res.status(400).json({
+                err,
+                message: 'Expense not updated'
+            })
+        }
     }
+
 
     const updateExpenses = async(req, res) => {
         const body = req.body

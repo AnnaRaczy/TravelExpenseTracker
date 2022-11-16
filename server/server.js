@@ -32,7 +32,7 @@ const UserFromDB = async (req, rec, next) => {
 }
 
 app.get("/", async (req, res) => {
-  const isConnected = await db.checkDB();
+  const isConnected = await DB.checkDB();
   if(isConnected) {
     res.send("DB Connected")
     return
@@ -40,7 +40,7 @@ app.get("/", async (req, res) => {
   res.send("DB not Connected");
 });
 
-app.post('/user/add', express.json(), DB, async (req, res, next) => {
+app.post('/user/:user/add', express.json(), DB, async (req, res, next) => {
   const user = new UserModel({
     username: req.body.username,
     name: req.body.name,
@@ -61,7 +61,7 @@ app.get('/user/:user/trips', DB, UserFromDB, async(req, res, next) => {
   next();
 })
 
-app.post('/user/:user/trips', express.json(), DB, UserFromDB, async(req, res, next) => {
+app.post('/user/:user/:trip', express.json(), DB, UserFromDB, async(req, res, next) => {
   const user = req.params.user
 
   const trip = new TripsModel({
@@ -96,7 +96,7 @@ app.get('/user/:user/expenses', DB, UserFromDB, async(req, res, next) => {
   next();
 })
 
-app.post('/user/:user/expenses', DB, UserFromDB, async(req, res, next) => {
+app.post('/user/:user/:expense', DB, UserFromDB, async(req, res, next) => {
   const user = req.params.user;
   console.log(user);
 

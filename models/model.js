@@ -19,6 +19,7 @@ const optionsUser = {
 
 
 const Trips = {
+    tripId: {type: String}, // ????
     name: {
         type: String, 
         required: true,
@@ -44,6 +45,7 @@ const optionsTrips = {
 
 
 const Expenses = {
+    expenseId: {type: String}, // ????
     category : {
         type: String, 
         required: true,
