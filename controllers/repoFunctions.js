@@ -43,7 +43,7 @@ const repoFunctions = ()=> {
 
 
     const getTrips = async(req, res) => {
-        const id = req.params.id
+        const { id } = req.params;
 
         try {
             const tripMappings = await MappingModel.find({userId: id})
@@ -61,7 +61,7 @@ const repoFunctions = ()=> {
 
 
     const addTrip = async(trip) => {
-        const body = req.params.body
+        const { id, name, budget, from ,to } = req.body;
 
         try {
             const mapping = new MappingModel({
@@ -70,11 +70,11 @@ const repoFunctions = ()=> {
             })
 
             const trip = new TripsModel({
-                tripId: body.id,
-                name: body.name,
-                budget: body.budget,
-                from: body.from,
-                to: body.to
+                tripId: id,
+                name,
+                budget,
+                from,
+                to
             })
     
             await mapping.save();
@@ -91,7 +91,7 @@ const repoFunctions = ()=> {
 
 
     const updateTrip = async(req, res) => {
-        const body = req.body
+        const { id, name, budget, from, to  } = req.body
         const options = {
             returnNewDocument: true, 
             upsert: true
@@ -100,10 +100,11 @@ const repoFunctions = ()=> {
         try {
             await MappingModel.findOneAndUpdate({tripId: id}, 
 
-            {name: body.name,
-            budget: body.budget,
-            from: body.from,
-            to: body.to},
+            {tripId: id,
+            name,
+            budget,
+            from,
+            to},
 
             options
             )
@@ -117,7 +118,7 @@ const repoFunctions = ()=> {
     }
 
     const deleteTrip = async(req, res) => {
-        const id = req.params.id
+        const { id } = req.params;
 
         try {
             await MappingModel.findOneAndDelete({tripId: id});
@@ -150,7 +151,7 @@ const repoFunctions = ()=> {
 
 
     const addExpense = async(expense) => {
-        const body = req.params.body;
+        const { id, category, amount} = req.body;
 
         try {
             const mapping = new MappingModel({
@@ -159,9 +160,9 @@ const repoFunctions = ()=> {
             })
 
             const expense = new ExpensesModel({
-                expenseId: body.id,
-                category: body.category,
-                amount: body.amount
+                expenseId: id,
+                category,
+                amount
             })
     
             await mapping.save();
@@ -178,7 +179,7 @@ const repoFunctions = ()=> {
 
 
     const updateExpense = async(req, res) => {
-        const body = req.body
+        const {id, category, amount} = req.body
         const options = {
             returnNewDocument: true, 
             upsert: true
@@ -188,8 +189,9 @@ const repoFunctions = ()=> {
         try {
             await MappingModel.findOneAndUpdate({expenseId: req.params.id},
                 {
-                category: body.category,
-                amount: body.amount
+                expenseId: id,
+                category,
+                amount
                 },
                 options
                 )
@@ -204,7 +206,7 @@ const repoFunctions = ()=> {
 
     const deleteExpense = async(req, res) => {
 
-        const id = req.params.id
+        const { id } = req.params
 
         try {
             await MappingModel.findOneAndDelete({expenseId: id})
