@@ -62,7 +62,7 @@ app.get('/user/:user/trips', DB, UserFromDB, async(req, res, next) => {
 })
 
 app.post('/user/:user/:trip', express.json(), DB, UserFromDB, async(req, res, next) => {
-  const user = req.params.user
+  const {user} = req.params
 
   const trip = new TripsModel({
     name: req.body.name,
@@ -78,26 +78,31 @@ app.post('/user/:user/:trip', express.json(), DB, UserFromDB, async(req, res, ne
 })
 
 app.put('/user/:user/:trip', express.json(), DB, UserFromDB, async(req, res) => {
-  const user = req.params.user
+  const { user } = req.params
+  const { name, budget, from, to} = req.body
 
+  const trip = new TripsModel({
+    name,
+    budget,
+    from,
+    to
+  })
+
+  await trip.save();
   await user.updateTrip()
   res.send('Trip updated');
 
 })
 
 app.delete('/user/:user/:trip', express.json(), DB, UserFromDB, async(req, res, next) => {
+  const { user } = req.params
 
-  const user = req.params.user
   await user.deleteTrip();
-  console.log("Trip deleted");
   res.send('Delete request called')
-
-
 })
 
 app.get('/user/:user/expenses', DB, UserFromDB, async(req, res, next) => {
-  const user = req.params.user;
-  console.log(user);
+  const { user } = req.params;
 
   const expenses = await user.getExpenses();
   res.send(expenses);
@@ -105,12 +110,12 @@ app.get('/user/:user/expenses', DB, UserFromDB, async(req, res, next) => {
 })
 
 app.post('/user/:user/:expense', DB, UserFromDB, async(req, res, next) => {
-  const user = req.params.user;
-  console.log(user);
+  const { user } = req.params;
+  const { category, amount} = req.body
 
   const expense = new ExpensesModel({
-    category: req.body.category,
-    amount: req.body.amount
+    category,
+    amount
   })
 
   await expense.save();
@@ -120,7 +125,7 @@ app.post('/user/:user/:expense', DB, UserFromDB, async(req, res, next) => {
 })
 
 app.put('/user/:user/:expense', express.json(), DB, UserFromDB, async(req, res) => {
-  const user = req.params.user
+  const { user } = req.params;
 
   await user.updateExpense()
   res.send('Expense updated');
@@ -128,13 +133,10 @@ app.put('/user/:user/:expense', express.json(), DB, UserFromDB, async(req, res) 
 })
 
 app.delete('/user/:user/:expense', express.json(), DB, UserFromDB, async(req, res, next) => {
+  const { user } = req.params;
 
-  const user = req.params.user
   await user.deleteExpense();
-  console.log("Expense deleted");
   res.send('Delete request called')
-
-
 })
 
 // All other GET requests not handled before will return static React app
