@@ -98,7 +98,7 @@ const repoFunctions = ()=> {
         }
 
         try {
-            await MappingModel.findOneAndUpdate({tripId: req.params.id}, 
+            await MappingModel.findOneAndUpdate({tripId: id}, 
 
             {name: body.name,
             budget: body.budget,
@@ -177,7 +177,7 @@ const repoFunctions = ()=> {
     }
 
 
-    const updateExpenses = async(req, res) => {
+    const updateExpense = async(req, res) => {
         const body = req.body
         const options = {
             returnNewDocument: true, 
@@ -199,21 +199,6 @@ const repoFunctions = ()=> {
                 message: 'Expense not updated'
             })
         }
-        // const expense = await MappingModel.findOneAndUpdate({expenseId: req.params.id}, (err, travel) => {
-        //     if(err) {
-        //         return res.status(400).json({
-        //             err,
-        //             message: 'Trip not found'
-        //         })
-        //     }
-        //     travel.category = body.category
-        //     travel.amount = body.amount
-
-            
-        // })
-
-        // await expense.save();
-        // console.log(`Expenses ${req.params._id} have been updated.`)
 
     }
 
@@ -237,130 +222,9 @@ const repoFunctions = ()=> {
     const findByUsername = async(username) => {
         return await this.findOne({username: username})
     }
-    
-    
-    // const createTrip = async(req, res) => {
-    //     const body = req.body
-        
-    //     if(!body) {
-    //         return res.status(400).json({
-    //             success: false,
-    //             error: 'You must provide a trip'
-    //         })
-    //     }
-
-    //     const trip = new TripsModel({
-    //         trips : { 
-    //             trip_id: 123,
-    //             data : {
-    //                 trip_name : "Germany",
-    //                 budget : 5000
-    //             }
-    //         }
-    //     })
-
-    //     if(!trip) {
-    //         return res.status(400).json({
-    //             success: false,
-    //             error: error
-    //         })
-    //     }
-
-    //     trip
-    //         .save()
-    //         .then(() => {
-    //             res.status(201).json({
-    //                 success: true,
-    //                 id: trip._id,
-    //                 message: 'Trip has been created'
-    //             })
-    //         })
-    //         .catch(err => {
-    //             return res.status(400).json({
-    //                 err,
-    //                 message: 'Trip not created'
-    //             })
-    //         }) 
-
-    // }        
-
-
-    // const updateTrip = async(req, res) => {
-    //     const body = req.body
-
-    //     if(!body) {
-    //         return res.status(400).json({
-    //             success: false,
-    //             message: 'Trip not found'
-    //         })
-    //     }
-
-    //     trip.findOne({ _id: req.params.id}, (err, trip) =>{
-    //         if(err) {
-    //             return res.status(400).json({
-    //                 err,
-    //                 message: 'Trip not found'
-    //             })
-    //         }
-
-    //         trip.name = body.name
-    //         trip.budget = body.budget
-    //         trip.start_date = body.start_date
-    //         trip.end_date = body.end_date
-    //         trip.expense_categories = body.expense_categories
-    //         trip.category_name = body.category_name
-    //         trip.amount = body.amount
-
-    //         trip
-    //             .save()
-    //             .then( () => {
-    //                 return res.status(200).json({
-    //                     success: true,
-    //                     _id: trip._id,
-    //                     message: 'Trip updated'
-    //                 })
-    //             })
-    //             .catch(err => {
-    //                 return res.status(404).json({
-    //                     err, 
-    //                     message: 'Trip not updated'
-    //                 })
-    //             })
-    //     })    
-    // }
-
-    // const deleteTrip = async(req, res) => {
-    //     const body = req.body
-
-    //     await Trip.findOneAndDelete({ _id: req.params.id}, (err, trip) =>{
-
-    //         if(err) { 
-    //             return res.status(400).json({
-    //                 success: false,
-    //                 err: err
-    //             })
-    //         }
-
-    //         if(!trip) {
-    //             return res.status(404).json({
-    //                 success: false,
-    //                 message: 'Trip not found'
-    //             })
-    //         }
-
-    //         return res.status(200).json({
-    //             success: true,
-    //             data: trip
-    //         })
-    //         .catch (err => { 
-    //             console.log(err)
-    //         })
-    //     })
-    // }
-
 
     
-    return {loadData, getTrips, getExpenses, addTrip, addExpense, updateTrip, updateExpenses, deleteTrip, deleteExpense, findByUsername}
+    return {checkDB, loadData, getTrips, getExpenses, addTrip, addExpense, updateTrip, updateExpense, deleteTrip, deleteExpense, findByUsername}
 }
 
 module.exports = repoFunctions();

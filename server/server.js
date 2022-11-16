@@ -77,6 +77,14 @@ app.post('/user/:user/:trip', express.json(), DB, UserFromDB, async(req, res, ne
   next();
 })
 
+app.put('/user/:user/:trip', express.json(), DB, UserFromDB, async(req, res) => {
+  const user = req.params.user
+
+  await user.updateTrip()
+  res.send('Trip updated');
+
+})
+
 app.delete('/user/:user/:trip', express.json(), DB, UserFromDB, async(req, res, next) => {
 
   const user = req.params.user
@@ -109,6 +117,14 @@ app.post('/user/:user/:expense', DB, UserFromDB, async(req, res, next) => {
   await user.addExpense(expense);
   res.send(`Added expense to ${expense.category}`)
   next()
+})
+
+app.put('/user/:user/:expense', express.json(), DB, UserFromDB, async(req, res) => {
+  const user = req.params.user
+
+  await user.updateExpense()
+  res.send('Expense updated');
+
 })
 
 app.delete('/user/:user/:expense', express.json(), DB, UserFromDB, async(req, res, next) => {
