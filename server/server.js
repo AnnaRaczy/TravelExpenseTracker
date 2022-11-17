@@ -3,13 +3,14 @@ const { default: mongoose } = require("mongoose");
 const path = require("path");
 const debug = require('debug')('server');
 require('dotenv').config()
-const tripsRouter = require('../routes/routes')
+const userRouter = require('../routes/routes')
 require('../controllers/repoFunctions')
 require("../models/model");
 const { nextTick } = require("process");
 
 const app = express();
 const port = process.env.REACT_APP_PORT || 3000;
+
 
 
 app.use(express.static(path.resolve(__dirname, "../client/build"))); 
@@ -30,6 +31,8 @@ const UserFromDB = async (req, rec, next) => {
   next()
 }
 
+app.use(userRouter)
+
 app.get("/", async (req, res) => {
   const isConnected = await DB.checkDB();
   if(isConnected) {
@@ -39,7 +42,7 @@ app.get("/", async (req, res) => {
   res.send("DB not Connected");
 });
 
-app.post('/user/:user/add', express.json(), DB, async (req, res, next) => {
+app.post('/:user/add', express.json(), DB, async (req, res, next) => {
   const {username, name, email} = req.body
 
   const user = new UserModel({
@@ -53,15 +56,15 @@ app.post('/user/:user/add', express.json(), DB, async (req, res, next) => {
   next();
 })
 
-app.get('/user/:user/trips', DB, UserFromDB, async(req, res, next) => {
+app.get('/:user/trips', DB, UserFromDB, async(req, res, next) => {
   const { user } = req.params;
 
   const trips = await user.getTrips();
-  res.send(trips);
+  res.json(trips);
   next();
 })
 
-app.post('/user/:user/:trip', express.json(), DB, UserFromDB, async(req, res, next) => {
+app.post('/:user/:trip', express.json(), DB, UserFromDB, async(req, res, next) => {
   const { user } = req.params;
 
   await user.addTrip()
@@ -69,7 +72,7 @@ app.post('/user/:user/:trip', express.json(), DB, UserFromDB, async(req, res, ne
   next();
 })
 
-app.put('/user/:user/:trip', express.json(), DB, UserFromDB, async(req, res) => {
+app.patch('/:user/:trip', express.json(), DB, UserFromDB, async(req, res) => {
   const { user } = req.params
 
   await user.updateTrip()
@@ -77,22 +80,22 @@ app.put('/user/:user/:trip', express.json(), DB, UserFromDB, async(req, res) => 
 
 })
 
-app.delete('/user/:user/:trip', express.json(), DB, UserFromDB, async(req, res, next) => {
+app.delete('/:user/:trip', express.json(), DB, UserFromDB, async(req, res, next) => {
   const { user } = req.params
 
   await user.deleteTrip();
   res.send('Delete request called')
 })
 
-app.get('/user/:user/expenses', DB, UserFromDB, async(req, res, next) => {
+app.get('/:user/expenses', DB, UserFromDB, async(req, res, next) => {
   const { user } = req.params;
 
   const expenses = await user.getExpenses();
-  res.send(expenses);
+  res.json(expenses);
   next();
 })
 
-app.post('/user/:user/:expense', DB, UserFromDB, async(req, res, next) => {
+app.post('/:user/:expense', DB, UserFromDB, async(req, res, next) => {
   const { user } = req.params;
   
   await user.addExpense(expense);
@@ -100,7 +103,7 @@ app.post('/user/:user/:expense', DB, UserFromDB, async(req, res, next) => {
   next()
 })
 
-app.put('/user/:user/:expense', express.json(), DB, UserFromDB, async(req, res) => {
+app.patch('/:user/:expense', express.json(), DB, UserFromDB, async(req, res) => {
   const { user } = req.params;
 
   await user.updateExpense()
@@ -108,7 +111,7 @@ app.put('/user/:user/:expense', express.json(), DB, UserFromDB, async(req, res) 
 
 })
 
-app.delete('/user/:user/:expense', express.json(), DB, UserFromDB, async(req, res, next) => {
+app.delete('/:user/:expense', express.json(), DB, UserFromDB, async(req, res, next) => {
   const { user } = req.params;
 
   await user.deleteExpense();
