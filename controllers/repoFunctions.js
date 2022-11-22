@@ -44,13 +44,27 @@ const repoFunctions = ()=> {
 
     const getTrips = async(req, res) => {
         const { id } = req.params;
-
+        // const { query } = req  
         try {
             const tripMappings = await MappingModel.find({userId: id})
             let trips = [];
             for (let mapping of tripMappings) {
                 trips.push(mapping.tripId)
         }
+        } catch(err) {
+            res.status(400).json({
+                err,
+                message: 'Trips not found'
+            })
+        }
+    }
+
+    const getTrip = async(req, res) => {
+        const { id} = req.params;
+
+        try{
+            await MappingModel.findById({tripId: id})
+
         } catch(err) {
             res.status(400).json({
                 err,

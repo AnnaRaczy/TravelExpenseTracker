@@ -31,7 +31,7 @@ const UserFromDB = async (req, rec, next) => {
   next()
 }
 
-app.use(userRouter)
+// app.use(userRouter)
 
 app.get("/", async (req, res) => {
   const isConnected = await DB.checkDB();
